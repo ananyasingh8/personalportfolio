@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="ananya singh" />
+    <title>ananya singh</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- LAYER 1: landscape background (assets/images/background.jpg) -->
+    <div class="background-layer" aria-hidden="true"></div>
+
+    <!-- LAYER 2: the open book (assets/images/book.png).
+       Sized/stretched by .book-frame in CSS — tune the --book-* variables. -->
+    <div class="book-frame" aria-hidden="true">
+      <img class="book-img" src="assets/images/book.png" alt="" />
+    </div>
+
+    <!-- LAYER 3: content, positioned over the book's two pages.
+       Each section.page is one spread; .page-left / .page-right are the
+       writable areas of each page. JS toggles .is-open via the nav. -->
+    <div class="content-layer">
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="#page-home" class="nav-link is-current" data-page="page-home"
+          >home</a
+        ><span class="nav-sep">|</span
+        ><a href="#page-blogs" class="nav-link" data-page="page-blogs">blog</a
+        ><span class="nav-sep">|</span
+        ><a href="#page-projects" class="nav-link" data-page="page-projects"
+          >projects</a
+        ><span class="nav-sep">|</span
+        ><a href="#page-experience" class="nav-link" data-page="page-experience"
+          >experience</a
+        >
+      </nav>
+
+      <main>
+        <!-- ================= PAGE 1: HOME ================= -->
+        <section id="page-home" class="page is-open">
+          <div class="page-left">
+            <!-- EDIT: name + intro (text taken from your mockup) -->
+            <h1 class="site-name">ananya singh</h1>
+            <p class="intro">
+              hi everyone! i&rsquo;m an undergrad
+              <span class="scribble-underline">studying</span> computer science
+              and <span class="highlight">artificial intelligence</span>.
+            </p>
+            <img
+              class="home-collage"
+              src="assets/images/collage.png"
+              alt="Photo collage"
+            />
+            <p class="open-to">
+              open to collaborators, internships, and research roles!
+            </p>
+          </div>
+          <div class="page-right">
+            <!-- EDIT: currently-up-to + recently lists -->
+            <p class="list-heading">currently up to...</p>
+            <ol class="current-list">
+              <li>
+                exploring ai welfare research! we&rsquo;re building
+                increasingly complex systems that may or may not warrant moral
+                consideration someday. i&rsquo;m excited to dive into these
+                questions.
+              </li>
+              <li>
+                studying model preferences, especially towards rude users, by
+                analyzing llm bail behaviour as a research assistant at
+                <a
+                  class="scribble-underline"
+                  href="https://www.padcomp.org/"
+                  target="_blank"
+                  rel="noopener"
+                  >padcomp lab</a
+                >!
+              </li>
+            </ol>
+            <p class="list-heading">recently...</p>
+            <ol class="current-list">
+              <li>
+                participated in apart research&rsquo;s digital minds sprint!
+                <a
+                  class="scribble-underline"
+                  href="https://drive.google.com/file/d/1kOFZof2JKX9cteZFSOSPwaKqDMirPW4u/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener"
+                  >view submission &rarr;</a
+                >
+              </li>
+              <li>
+                engaged in 8 weeks of discussions around x-risk, ai
+                consciousness, what a better future looks like and more at nous
+                ai safety x philosophy reading group!
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 2: EXPERIENCE =================
+           Journal entries: dates in the margin, role &middot; org, one line.
+           Left = experience, right = leadership / volunteering.
+           Lines are Ananya's own (lightly copy-edited). -->
+        <section id="page-experience" class="page">
+          <div class="page-left">
+            <p class="list-heading">experience</p>
+            <ol class="journal">
+              <li class="entry">
+                <div class="entry-body">
+                  <span class="entry-date">may 2026 &ndash; present</span>
+                  <p class="entry-role">
+                    research assistant <span class="entry-sep">&middot;</span>
+                    <span class="entry-meta">
+                      <span class="entry-org"><a
+                    class="scribble-underline"
+                    href="https://www.padcomp.org/"
+                    target="_blank"
+                    rel="noopener"
+                    >padcomp lab</a
+                  ></span>
+                    </span>
+                  </p>
+                  <p class="entry-line">
+                    studying model preferences, especially towards rude users, by analyzing llm bail behaviour
+                  </p>
+                </div>
+              </li>
+              <li class="entry has-snap side-right">
+                <div class="entry-body">
+                  <span class="entry-date">jan 2026 &ndash; present</span>
+                  <p class="entry-role">
+                    tech &amp; ops intern <span class="entry-sep">&middot;</span>
+                    <span class="entry-meta">
+                      <span class="entry-org">bmo financial group</span>
+                    </span>
+                  </p>
+                  <p class="entry-line">
+                    leading ai-native process improvements and supporting senior pms
+                  </p>
+                </div>
+                <div class="snap snap-portrait">
+                  <img src="assets/images/experience/bmo.jpg" alt="team photo outside bmo, 33 dundas street west" />
+                </div>
+              </li>
+              <li class="entry">
+                <div class="entry-body">
+                  <span class="entry-date">sep 2024 &ndash; apr 2025</span>
+                  <p class="entry-role">
+                    junior full-stack developer <span class="nowrap">co-op</span> <span class="entry-sep">&middot;</span>
+                    <span class="entry-meta">
+                      <span class="entry-org">operto guest technologies</span>
+                    </span>
+                  </p>
+                  <p class="entry-line">
+                    my first swe role where i built automations, fixed bugs, and shipped ui tools for the customer success team
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div class="page-right">
+            <p class="list-heading">leadership &amp; volunteering</p>
+            <ol class="journal">
+              <li class="entry has-snap side-left">
+                <div class="entry-body">
+                  <span class="entry-date">may 2025 &ndash; present</span>
+                  <p class="entry-role">
+                    president <span class="entry-sep">&middot;</span>
+                    <span class="entry-meta">
+                      <span class="entry-org">sfu blueprint</span>
+                    </span>
+                  </p>
+                  <p class="entry-line">
+                    building pro bono tech for nonprofits and leading a 50+ person org
+                  </p>
+                </div>
+                <div class="snap">
+                  <img src="assets/images/experience/bp.jpg" alt="sfu blueprint team on the beach" />
+                </div>
+              </li>
+              <li class="entry has-snap side-right">
+                <div class="entry-body">
+                  <span class="entry-date">present</span>
+                  <p class="entry-role">
+                    host <span class="entry-sep">&middot;</span>
+                    <span class="entry-meta">
+                      <span class="entry-org">treehouse (sfu&rsquo;s socratica node)</span>
+                    </span>
+                  </p>
+                  <p class="entry-line">
+                    hosting weekly socratica co-working sessions for like-minded builders and creatives to find their third place
+                  </p>
+                </div>
+                <div class="snap snap-square">
+                  <img src="assets/images/experience/treehouse.jpg" alt="treehouse team in front of the first spotlight screen" />
+                </div>
+              </li>
+              <li class="entry">
+                <div class="entry-body">
+                  <span class="entry-date">may 2025 &ndash; dec 2025</span>
+                  <p class="entry-role">
+                    vp finance <span class="entry-sep">&middot;</span>
+                    <span class="entry-meta">
+                      <span class="entry-org">sfu residence hall association</span>
+                    </span>
+                  </p>
+                  <p class="entry-line">
+                    managed a $60,000 budget and hosted residence events
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 3: PROJECTS =================
+           Left page: index of projects. Right page: detail of the
+           selected one. Text comes verbatim from Ananya's Notion
+           pages; images live in assets/images/projects/. -->
+        <section id="page-projects" class="page">
+          <div class="page-left">
+            <ul class="project-index">
+              <li>
+                <button
+                  type="button"
+                  class="project-tab is-current"
+                  data-project="proj-glo"
+                >
+                  <span class="index-num">1)</span> glo - skincare management
+                  app
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="project-tab"
+                  data-project="proj-ml"
+                >
+                  <span class="index-num">2)</span> machine learning my
+                  friendships
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="project-tab"
+                  data-project="proj-dsss"
+                >
+                  <span class="index-num">3)</span> DSSS hackathon (2nd place)
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="page-right">
+            <article id="proj-glo" class="project-detail is-open">
+              <!-- pane 1: intro + links + big photo pile -->
+              <div id="glo-pane-1" class="detail-pane is-open">
+                <p class="detail-intro">
+                  glo was inspired by my daily struggles navigating the complex
+                  skincare world.
+                </p>
+                <p class="detail-quicklinks">
+                  <a
+                    class="scribble-underline"
+                    href="https://www.figma.com/deck/hWqkvUXRKTGSJhl8XOGUeB/Glo-Final-Presentation?node-id=3-124&amp;t=HPjaygGjGDnznvoZ-1"
+                    target="_blank"
+                    rel="noopener"
+                    >project slides &rarr;</a
+                  >
+                  <a
+                    class="scribble-underline"
+                    href="https://www.figma.com/proto/tAh82Qlc0gZ1weWITNW14a/Glo---interactive-prototype?node-id=8-189&amp;p=f&amp;t=HJvf644dGhn6Rp5m-9&amp;scaling=scale-down&amp;content-scaling=fixed&amp;page-id=2%3A57&amp;starting-point-node-id=8%3A189&amp;show-proto-sidebar=1"
+                    target="_blank"
+                    rel="noopener"
+                    >interactive prototype &rarr;</a
+                  >
+                </p>
+                <!-- app screen carousel: arrows swap one screen at a time.
+                     order: the four tabs (home, stars, routines, insights),
+                     then the streak popup and ingredient analysis -->
+                <div
+                  class="plot-carousel carousel-portrait"
+                  aria-label="app screenshots"
+                >
+                  <button
+                    type="button"
+                    class="carousel-arrow carousel-prev"
+                    aria-label="previous screenshot"
+                  >
+                    &larr;
+                  </button>
+                  <div class="carousel-frame" aria-live="polite">
+                    <figure class="carousel-slide is-current">
+                      <img
+                        src="assets/images/projects/glo-home.png"
+                        alt="glo app home tab"
+                      />
+                      <figcaption>
+                        home page to scan products and log routine
+                      </figcaption>
+                    </figure>
+                    <figure class="carousel-slide">
+                      <img
+                        src="assets/images/projects/glo-stars.png"
+                        alt="glo app stars tab"
+                      />
+                      <figcaption>stars page for gamification</figcaption>
+                    </figure>
+                    <figure class="carousel-slide">
+                      <img
+                        src="assets/images/projects/glo-routines.png"
+                        alt="glo app routines tab"
+                      />
+                      <figcaption>routines to manage the roster</figcaption>
+                    </figure>
+                    <figure class="carousel-slide">
+                      <img
+                        src="assets/images/projects/glo-insights.png"
+                        alt="glo app insights tab"
+                      />
+                      <figcaption>insights to discover more</figcaption>
+                    </figure>
+                    <figure class="carousel-slide">
+                      <img
+                        src="assets/images/projects/glo-streak.png"
+                        alt="glo app streak popup"
+                      />
+                      <figcaption>day 7 streak popup</figcaption>
+                    </figure>
+                    <figure class="carousel-slide">
+                      <img
+                        src="assets/images/projects/glo-analysis.png"
+                        alt="glo app ingredient analysis screen"
+                      />
+                      <figcaption>niacinamide ingredient analysis</figcaption>
+                    </figure>
+                  </div>
+                  <button
+                    type="button"
+                    class="carousel-arrow carousel-next"
+                    aria-label="next screenshot"
+                  >
+                    &rarr;
+                  </button>
+                </div>
+                <p class="pane-nav pane-nav-next">
+                  <a class="pane-link" href="#" data-pane="glo-pane-2"
+                    >next page &rarr;</a
+                  >
+                </p>
+              </div>
+
+              <!-- pane 2: process + results scraps -->
+              <div id="glo-pane-2" class="detail-pane">
+                <div class="scrap-row">
+                  <div class="scrap scrap-a">
+                    <div class="scrap-inner">
+                      <p class="scrap-heading">process</p>
+                      <ul class="scrap-points">
+                        <li>
+                          used design thinking to brainstorm and produce initial
+                          sketches
+                        </li>
+                        <li>user interviews helped validate the problem</li>
+                        <li>user surveys helped iteratively improve design</li>
+                        <li>
+                          then i spent hours on figma producing the final
+                          high-fi prototype
+                          <i
+                            >(almost gave myself carpal tunnel, pls use a
+                            mouse!)</i
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="scrap scrap-b">
+                    <div class="scrap-inner">
+                      <p class="scrap-heading">results + next steps</p>
+                      <ul class="scrap-points">
+                        <li>got A+ in interactive prototype</li>
+                        <li>
+                          got positive feedback from everyone around - seems
+                          like there's enough interest from people to use glo
+                        </li>
+                        <li>
+                          might develop and publish glo on app store in
+                          the future!
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <p class="pane-nav">
+                  <a class="pane-link" href="#" data-pane="glo-pane-1"
+                    >&larr; back</a
+                  >
+                </p>
+              </div>
+            </article>
+
+            <article id="proj-ml" class="project-detail">
+              <p class="detail-intro">
+                i asked myself: can machine learning discover my friendship
+                patterns using 8 years of instagram dms? turns out it can -
+                it found 5 groups of friendships in 400K+ messages across
+                1100+ people - pretty cool right!!!
+              </p>
+              <p class="detail-quicklinks">
+                <a
+                  class="scribble-underline"
+                  href="#page-ml-case"
+                  data-page="page-ml-case"
+                  >full case study &rarr;</a
+                >
+              </p>
+              <!-- plot carousel: one chart at a time, caption lines lifted
+                   from the case study's plot captions -->
+              <div class="plot-carousel" aria-label="clustering plots">
+                <button
+                  type="button"
+                  class="carousel-arrow carousel-prev"
+                  aria-label="previous plot"
+                >
+                  &larr;
+                </button>
+                <div class="carousel-frame" aria-live="polite">
+                  <figure class="carousel-slide is-current">
+                    <img
+                      src="assets/images/projects/ml-plot1.png"
+                      alt="distribution of friendship levels"
+                    />
+                    <figcaption>
+                      distribution of friendship levels: 320 people are
+                      Old Rare Contacts: basically everyone you
+                      meet but don&rsquo;t really connect with. only 47 made
+                      it to Best Friends.
+                    </figcaption>
+                  </figure>
+                  <figure class="carousel-slide">
+                    <img
+                      src="assets/images/projects/ml-plot2.png"
+                      alt="friendship patterns scatter plot"
+                    />
+                    <figcaption>
+                      friendship patterns: Best Friends sit alone in the
+                      top-right corner with high messages AND high recency.
+                      Old Friends vs Current Friends: similar message counts,
+                      but different recency.
+                    </figcaption>
+                  </figure>
+                  <figure class="carousel-slide">
+                    <img
+                      src="assets/images/projects/ml-plot3.png"
+                      alt="friendship timeline"
+                    />
+                    <figcaption>
+                      friendship timeline: most 6-8 year relationships have
+                      flatlined, while my SFU friends cluster in the 0-2 year
+                      range with high activity. geographic moves = friendship
+                      resets.
+                    </figcaption>
+                  </figure>
+                  <figure class="carousel-slide">
+                    <img
+                      src="assets/images/projects/ml-plot.png"
+                      alt="friendship characteristics heatmap"
+                    />
+                    <figcaption>
+                      friendship characteristics heatmap: Best Friends
+                      dominate every single metric, but Old Contacts have the
+                      highest messages per day rate
+                    </figcaption>
+                  </figure>
+                </div>
+                <button
+                  type="button"
+                  class="carousel-arrow carousel-next"
+                  aria-label="next plot"
+                >
+                  &rarr;
+                </button>
+              </div>
+            </article>
+
+            <article id="proj-dsss" class="project-detail">
+              <!-- pane 1: intro + link + team photo -->
+              <div id="dsss-pane-1" class="detail-pane is-open">
+                <p class="detail-intro">
+                  the hackathon was hosted by SFU Data Science Student Society
+                  (DSSS) and SFU AIESEC as an opportunity for students to solve
+                  problems using a blend of data skills and business acumen.
+                </p>
+                <p class="detail-quicklinks">
+                  <a
+                    class="scribble-underline"
+                    href="https://www.figma.com/deck/naJDYuWkIHwgprdfx3B7ka"
+                    target="_blank"
+                    rel="noopener"
+                    >winning slide deck &rarr;</a
+                  >
+                </p>
+                <div class="detail-photos">
+                  <img
+                    class="detail-photo detail-photo-wide"
+                    src="assets/images/projects/dsss-team.jpg"
+                    alt="DSSS hackathon team photo"
+                  />
+                </div>
+                <p class="pane-nav pane-nav-next">
+                  <a class="pane-link" href="#" data-pane="dsss-pane-2"
+                    >next page &rarr;</a
+                  >
+                </p>
+              </div>
+
+              <!-- pane 2: process + results scraps -->
+              <div id="dsss-pane-2" class="detail-pane">
+                <div class="scrap-row">
+                  <div class="scrap scrap-a">
+                    <div class="scrap-inner">
+                      <p class="scrap-heading">process</p>
+                      <ul class="scrap-points">
+                        <li>
+                          data analysis (regression, funnel plot, descriptive
+                          statistics)
+                        </li>
+                        <li>
+                          design thinking to prepare slides that stood out and
+                          communicated the story with impact
+                        </li>
+                        <li>team brainstorming sessions for rapid problem solving</li>
+                        <li>in-depth analysis of suggested solutions</li>
+                        <li>
+                          discovered extra evidence through research to support
+                          claims
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="scrap scrap-b">
+                    <div class="scrap-inner">
+                      <p class="scrap-heading">results</p>
+                      <ul class="scrap-points">
+                        <li>2nd place amongst 15+ participating teams</li>
+                        <li>
+                          positive feedback from judges and other teams directed
+                          at our creative slide deck
+                        </li>
+                        <li>
+                          positive feedback from AIESEC exec team on proposed
+                          solutions
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <p class="pane-nav">
+                  <a class="pane-link" href="#" data-pane="dsss-pane-1"
+                    >&larr; back</a
+                  >
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- ============ CASE STUDY: machine learning my friendships ============
+           Full write-up imported from the Notion page (Ananya's own words).
+           Not in the nav — reached from the projects page; data-nav keeps
+           "projects" highlighted while it's open. -->
+        <section id="page-ml-case" class="page" data-nav="page-projects">
+          <div class="page-left">
+            <p class="back-line">
+              <a
+                class="back-link"
+                href="#page-projects"
+                data-page="page-projects"
+                >&larr; back to projects</a
+              >
+            </p>
+            <h2 class="case-title">machine learning my friendships</h2>
+
+            <p class="case-label">The Big Question</p>
+            <p class="case-text">
+              I have had my current Instagram account for over 8 years. For the
+              major chunk of this time, I lived in India&rsquo;s busiest and
+              most social city, Mumbai, where the teen culture is
+              such that Instagram becomes the main mode of socializing. For
+              Mumbai teens, Instagram direct messages (DMs) are the western
+              equivalent of text messages. Consequently, I accumulated a large
+              library of DMs over the years, full of conversations and comments
+              from people I met at every stage of my early life. Surely this
+              rich dataset could tell us an interesting story with the right
+              amount of data science. Hence, the question:
+            </p>
+            <blockquote class="detail-quote">
+              Can machine learning discover meaningful friendship patterns
+              hidden in 8 years of digital conversations, and do these patterns
+              match how we actually think about our relationships?
+            </blockquote>
+
+            <p class="case-label">Data at a glance</p>
+            <ul class="detail-points">
+              <li>453,782 raw messages after cleaning</li>
+              <li>1186 users after entity resolution</li>
+              <li>oldest to latest message: 2017-04-12 to 2025-07-16</li>
+            </ul>
+
+            <p class="case-label">Data Collection</p>
+            <p class="case-text">
+              Instagram allows data export via mobile app. After multiple
+              attempts due to 4-day expiration limits and occasional incomplete
+              downloads, I successfully obtained 8 years of message data.
+            </p>
+
+            <p class="case-label">Data Cleaning</p>
+            <p class="case-text">
+              I spent most of my time getting the data into a useful shape. The
+              raw Instagram export contained over 540,000 messages across 1,200+
+              conversations, but required extensive preprocessing before
+              analysis. Each conversation was stored as a separate folder
+              containing multiple JSON files (message_1.json, message_2.json,
+              etc.). Each file contained message metadata including sender
+              names, timestamps, content, and call duration.
+            </p>
+            <p class="case-sublabel">Major cleaning challenges</p>
+            <ul class="detail-points">
+              <li>
+                <strong>Filtering Conversations</strong>: I needed to
+                distinguish between individual conversations and group chats.
+                Using the &ldquo;participants&rdquo; field in each JSON file, I
+                excluded any conversation with more than 2 participants to focus
+                solely on one-on-one relationships.
+              </li>
+              <li>
+                <strong>System Message Removal</strong>: A significant
+                portion of messages were system-generated notifications like
+                &ldquo;You started a video call,&rdquo; or &ldquo;Reacted
+                &hearts; to your message.&rdquo; I used regex patterns to
+                identify and remove these automated messages, keeping only real
+                communication.
+              </li>
+              <li>
+                <strong>Data Standardization</strong>: Messages had
+                inconsistent formats and some encoding issues. I converted all
+                timestamps to datetime objects and since my analysis focused on
+                communication patterns rather than content, I left encoding
+                issues unresolved: I only needed message counts, timing,
+                and metadata.
+              </li>
+              <li>
+                <strong>Entity Resolution</strong>: Many people had
+                multiple Instagram accounts over the years, appearing as
+                separate users in my data. I created a manual mapping system to
+                merge conversations from the same person, combining their
+                message counts and recalculating conversation timelines.
+              </li>
+            </ul>
+
+            <p class="case-label">Feature Engineering</p>
+            <p class="case-text">
+              For each conversation, I calculated key friendship indicators:
+              total messages exchanged, message frequency, conversation span,
+              recency scores using exponential decay, communication balance
+              ratios, and call duration totals. However, I ended up using only a
+              few of these features based on how the clusters were forming.
+            </p>
+          </div>
+          <div class="page-right">
+            <p class="case-label">
+              Machine Learning Process (for the technical)
+            </p>
+            <p class="case-sublabel">Why KMeans Clustering?</p>
+            <p class="case-text">
+              It was the intuitive choice to go with clustering since my data
+              was unlabeled. K-means groups similar observations together, which
+              fits the goal of finding friendship patterns. Since I expected a
+              reasonable number of distinct friendship types (around 4-6),
+              K-means with n_clusters=5 was appropriate.
+            </p>
+            <p class="case-sublabel">Key preprocessing decisions</p>
+            <ul class="detail-points">
+              <li>
+                <strong>Log transformation of message counts</strong>:
+                message counts were heavily right-skewed, with most
+                conversations having few messages but some extreme outliers
+                reaching thousands. The log transformation normalized this
+                distribution.
+              </li>
+              <li>
+                <strong>Filtering threshold (&gt;10 messages)</strong>:
+                conversations with very few messages represented brief
+                encounters rather than meaningful relationships.
+              </li>
+              <li>
+                <strong>Feature selection</strong>: three key features
+                captured different aspects of friendship: log_messages,
+                recency_score, and conversation_span_days. To weight current
+                communication patterns more heavily, I included recency_score
+                three times in the feature list.
+              </li>
+            </ul>
+            <p class="case-sublabel">Cluster Discovery</p>
+            <p class="case-text">
+              I tried 4, 5, and 6 clusters: 5 gave the best balance
+              without being too granular or losing important distinctions. When
+              I looked at who ended up in each cluster, I could immediately tell
+              what each group represented. The algorithm basically reads my mind
+              about how I categorize my relationships.
+            </p>
+
+            <p class="case-label">Results (for the less technical)</p>
+            <p class="case-text">My honest description of each group:</p>
+            <ul class="detail-points">
+              <li>
+                <strong>Best Friends</strong>: My closest friends I have
+                made over the years. Total messages are high, and conversation
+                spans are long.
+              </li>
+              <li>
+                <strong>Current Friends</strong>: High recency ratios, and
+                this cluster is full of people I met after coming to SFU.
+              </li>
+              <li>
+                <strong>Old Friends</strong>: High message volume but low
+                recency. The &ldquo;we don&rsquo;t talk anymore like we used to
+                do&rdquo; cluster.
+              </li>
+              <li>
+                <strong>Old Contacts</strong>: Low recency and low
+                message volume. The &ldquo;out of sight, out of mind&rdquo;
+                people.
+              </li>
+              <li>
+                <strong>Old Rare Contacts</strong>: Highest per day
+                messages but everything else is the lowest. People I spoke to
+                once or twice for very specific reasons.
+              </li>
+            </ul>
+
+            <img
+              class="case-plot"
+              src="assets/images/projects/ml-plot1.png"
+              alt="Distribution of friendship levels"
+            />
+            <p class="case-caption">
+              Plot 1: Distribution of Friendship Levels. 320 people are
+              &ldquo;Old Rare Contacts&rdquo;: basically everyone you
+              meet but don&rsquo;t really connect with. Only 47 made it to
+              &ldquo;Best Friends.&rdquo;
+            </p>
+
+            <img
+              class="case-plot"
+              src="assets/images/projects/ml-plot2.png"
+              alt="Friendship patterns scatter plot"
+            />
+            <p class="case-caption">
+              Plot 2: Friendship Patterns. Best Friends sit alone in the
+              top-right corner with high messages AND high recency. Old
+              Friends vs Current Friends: similar message counts, totally
+              different recency.
+            </p>
+
+            <img
+              class="case-plot"
+              src="assets/images/projects/ml-plot3.png"
+              alt="Friendship timeline"
+            />
+            <p class="case-caption">
+              Plot 3: Friendship Timeline. Most 6-8 year relationships
+              have flatlined, while my SFU friends cluster in the 0-2 year range
+              with high activity. Geographic moves = friendship resets.
+            </p>
+
+            <img
+              class="case-plot"
+              src="assets/images/projects/ml-plot4.png"
+              alt="Communication intensity by cluster"
+            />
+            <p class="case-caption">
+              Plot 4: Communication Intensity. Best Friends dominate with
+              4,000+ messages, but Old Friends (1,538) beat Current Friends
+              (165): accumulated history counts.
+            </p>
+
+            <img
+              class="case-plot"
+              src="assets/images/projects/ml-plot.png"
+              alt="Friendship characteristics heatmap"
+            />
+            <p class="case-caption">
+              Plot 5: Friendship Characteristics Heatmap. Best Friends
+              dominate every single metric. But Old Contacts have the highest
+              messages per day rate: the &ldquo;intense but brief&rdquo;
+              pattern. Recent doesn&rsquo;t always mean deep.
+            </p>
+
+            <p class="case-label">Limitations</p>
+            <p class="case-text">
+              Entity resolution wasn&rsquo;t exhaustive, so duplicates likely
+              remain. I focused only on 1-on-1 conversations, missing group chat
+              dynamics. The recency score weighting was subjective rather than
+              optimized, and I had no external validation of friendship
+              strength. Limiting to Instagram misses other communication
+              channels like WhatsApp or calls.
+            </p>
+
+            <p class="case-label">Beyond Numbers</p>
+            <p class="case-text">
+              My biggest revelation? Recency bias is incredibly real. Despite
+              having years of message history, recency_score became my most
+              important feature, even more than total_messages or
+              conversation_span_days.
+            </p>
+            <p class="case-text">
+              Why? Because psychologically, I feel closer to someone I texted
+              yesterday than someone I exchanged thousands of messages with two
+              years ago. Our brains prioritize recent interactions over
+              accumulated history.
+            </p>
+            <p class="case-text">
+              This insight could have real applications. Instagram could use
+              similar clustering to suggest &ldquo;people you might want to
+              reconnect with&rdquo; by identifying Old Friends with high
+              historical engagement but low recent activity.
+            </p>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 4: BLOGS =================
+           Scrapbook clippings: cover image + title from each Substack
+           post, pasted in with washi tape. To add an article, copy a
+           <a class="clipping"> block (image goes in assets/images/blog/). -->
+        <section id="page-blogs" class="page">
+          <div class="page-left">
+            <a
+              class="clipping"
+              href="https://undermanylayersofthought.substack.com/p/elegant-math-made-me-cry"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="assets/images/blog/elegant-math.jpg" alt="" />
+              <span class="clipping-title">elegant math made me cry</span>
+            </a>
+            <a
+              class="clipping"
+              href="https://undermanylayersofthought.substack.com/p/mangoes-helped-me-stop-people-pleasing"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="assets/images/blog/mangoes.jpg" alt="" />
+              <span class="clipping-title"
+                >mangoes helped me stop people pleasing</span
+              >
+            </a>
+          </div>
+          <div class="page-right">
+            <a
+              class="clipping"
+              href="https://undermanylayersofthought.substack.com/p/my-first-thoughts-on-ai-welfare"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="assets/images/blog/ai-welfare.jpg" alt="" />
+              <span class="clipping-title"
+                >my first thoughts on ai welfare!</span
+              >
+            </a>
+            <a
+              class="clipping"
+              href="https://undermanylayersofthought.substack.com/p/to-be-good-and-to-not-feel-good-about"
+              target="_blank"
+              rel="noopener"
+            >
+              <img src="assets/images/blog/to-be-good.jpg" alt="" />
+              <span class="clipping-title"
+                >to be good and to not feel good about it</span
+              >
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+    <!-- /.content-layer -->
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

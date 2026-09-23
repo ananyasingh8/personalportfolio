@@ -1,0 +1,1093 @@
+/* ============================================================
+   ananya singh — portfolio ("analogue book" layout)
+   Shell only: layout + layer positioning. Visual design pass
+   comes later.
+   ============================================================ */
+
+:root {
+  --font-handwriting: "Ananya Handwriting", "Bradley Hand", "Segoe Script",
+    "Noteworthy", "Comic Sans MS", cursive;
+  --font-body: "Iowan Old Style", Palatino, Charter, Georgia, serif;
+
+  --ink-color: #2e2a26;
+  /* darkened from #6b625a: the lighter tone measured ~4:1 on the paper,
+     under the 4.5:1 AA bar at caption sizes */
+  --ink-faded: #5c534b;
+  --highlight-color: rgba(255, 224, 130, 0.55); /* soft marker yellow */
+
+  /* Book placement: how far the book sits from the viewport edges.
+     The PNG is stretched to fill this frame (like the mockup). */
+  --book-inset-x: 12vw;
+  --book-inset-y: 0vh;
+
+  /* Writable areas of each page, as insets (top right bottom left)
+     of the book frame. Tune these so text sits on the paper. */
+  --page-left-inset: 12% 54% 14% 13%;
+  --page-right-inset: 16% 12% 14% 54%;
+
+  /* Where the nav sits on the left page */
+  --nav-top: 12%;
+  --nav-left: 13%;
+
+  /* Tilt of the left page in the book photo — applied to the nav
+     (and reusable on anything that should sit "on" the paper) */
+  --page-tilt: 4deg;
+}
+
+/* Ananya's handwriting font (assets/fonts/new.ttf) */
+@font-face {
+  font-family: "Ananya Handwriting";
+  src: url("../assets/fonts/new.ttf") format("truetype");
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Fluid type: the root font size tracks viewport width, so all
+   rem-based sizes (name, intro, nav, collage cap) scale with the
+   book. ~15.5px at 1280w, ~17.4px on a 14" MBP (1512w), ~19.2px
+   on a 16" (1728w), capped at 22px for 2560+ monitors. */
+html {
+  font-size: clamp(15px, 0.85vw + 4.5px, 26px);
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--ink-color);
+  overflow: hidden; /* the book is the viewport; pages scroll internally if needed */
+}
+
+/* ------------------------------------------------------------
+   LAYER 1 — landscape background
+   ------------------------------------------------------------ */
+.background-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: url("../assets/images/background.jpg") center / cover no-repeat;
+}
+
+/* ------------------------------------------------------------
+   LAYER 2 — the book PNG, stretched to fill its frame
+   ------------------------------------------------------------ */
+.book-frame {
+  position: fixed;
+  top: var(--book-inset-y);
+  bottom: var(--book-inset-y);
+  left: var(--book-inset-x);
+  right: var(--book-inset-x);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.book-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* stretched like the mockup; change to contain to keep proportions */
+}
+
+/* ------------------------------------------------------------
+   LAYER 3 — content over the book pages
+   ------------------------------------------------------------ */
+.content-layer {
+  position: fixed;
+  top: var(--book-inset-y);
+  bottom: var(--book-inset-y);
+  left: var(--book-inset-x);
+  right: var(--book-inset-x);
+  z-index: 3;
+}
+
+.site-nav {
+  position: absolute;
+  top: var(--nav-top);
+  left: var(--nav-left);
+  z-index: 2; /* above .page-left, which overlaps the nav area */
+  font-size: 0.95rem;
+  /* follow the slight tilt of the left page so the nav sits "on" the paper */
+  transform: rotate(var(--page-tilt, 2.5deg));
+  transform-origin: left center;
+  /* long leaves (ml case study) scroll their text under the nav — a soft
+     paper-tinted blur keeps the nav legible as content slides beneath */
+  padding: 0.15rem 0.55rem 0.2rem;
+  margin: -0.15rem -0.55rem -0.2rem;
+  border-radius: 8px;
+  background: rgba(231, 228, 218, 0.55);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.nav-sep {
+  margin: 0 0.5rem;
+  color: var(--ink-faded);
+}
+
+.nav-link {
+  color: var(--ink-color);
+  text-decoration: none;
+}
+
+.nav-link:hover { text-decoration: underline; }
+
+/* Current page: same rough marker swipe as .highlight, in magenta */
+.nav-link.is-current {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><filter id='m' x='-15%25' y='-30%25' width='130%25' height='160%25'><feTurbulence type='fractalNoise' baseFrequency='0.025 0.22' numOctaves='2' seed='4'/><feDisplacementMap in='SourceGraphic' scale='9'/></filter><rect x='4' y='7' width='92' height='27' fill='%23e0559f' opacity='0.45' filter='url(%23m)'/></svg>");
+  background-size: 100% 100%;
+  padding: 0.12em 0.4em;
+  margin: 0 -0.4em; /* highlight overhangs without shifting the nav text */
+}
+
+a:focus-visible {
+  outline: 2px dashed var(--ink-faded);
+  outline-offset: 3px;
+}
+
+/* Pages: one spread each, toggled by JS */
+.page { display: none; }
+.page.is-open { display: block; }
+
+.page-left,
+.page-right {
+  position: absolute;
+  overflow-y: auto;
+  /* rotated/fanned children overflow by a px or two horizontally —
+     never show a horizontal scrollbar for that */
+  overflow-x: hidden;
+  /* when a leaf genuinely scrolls, keep the bar thin and paper-toned —
+     and invisible at rest (it hugs the book's page edge awkwardly
+     otherwise). The "scroll ↓" chip is the resting affordance; the bar
+     fades in while the reader's cursor is on the leaf. */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.page-left:hover,
+.page-right:hover {
+  scrollbar-color: rgba(110, 98, 90, 0.35) transparent;
+}
+
+.page-left::-webkit-scrollbar,
+.page-right::-webkit-scrollbar { width: 5px; }
+
+.page-left::-webkit-scrollbar-thumb,
+.page-right::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.page-left:hover::-webkit-scrollbar-thumb,
+.page-right:hover::-webkit-scrollbar-thumb {
+  background: rgba(110, 98, 90, 0.35);
+}
+
+.page-left::-webkit-scrollbar-track,
+.page-right::-webkit-scrollbar-track {
+  background: transparent;
+  /* keep the track off the leaf's top and bottom paper edges */
+  margin-block: 0.9rem;
+}
+
+.page-left  { inset: var(--page-left-inset); }
+.page-right { inset: var(--page-right-inset); }
+
+/* Leave room for the nav on the left page */
+.page-left { padding-top: 3rem; }
+
+/* ------------------------------------------------------------
+   Home page
+   ------------------------------------------------------------ */
+.site-name {
+  margin: 2.2rem 0 0.9rem;
+  font-family: var(--font-handwriting);
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  font-weight: normal;
+  line-height: 1.1;
+  transform: rotate(var(--page-tilt));
+  transform-origin: left center;
+}
+
+.intro {
+  margin: 0;
+  max-width: 26rem;
+  line-height: 1.55;
+  transform: rotate(calc(var(--page-tilt) * 0.65));
+  transform-origin: left center;
+}
+
+/* Highlighter stroke behind the intro text. box-decoration-break: clone
+   gives every wrapped line its own strip, so it survives any reflow.
+   The stroke itself is an inline SVG: a rect roughed up with turbulence
+   displacement, stretched to each line box — edges wobble like a real
+   marker swipe. Colour lives in the SVG fill (%23 = #). */
+.highlight {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'><filter id='m' x='-10%25' y='-30%25' width='120%25' height='160%25'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.22' numOctaves='2' seed='11'/><feDisplacementMap in='SourceGraphic' scale='9'/></filter><rect x='4' y='7' width='192' height='27' fill='%23ffd54f' opacity='0.55' filter='url(%23m)'/></svg>");
+  background-size: 100% 100%;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.12em 0.45em;
+  margin: 0 -0.45em; /* swipe overhangs the text without shifting neighbours */
+}
+
+.home-collage {
+  display: block;
+  margin: 2rem auto 0;
+  /* vh term keeps the leaf from overflowing on shorter screens */
+  width: min(88%, 23rem, 34vh);
+  height: auto;
+}
+
+/* right-leaf counter-tilt like every other right page; top margin gives
+   the rotated heading room to rise without clipping at the leaf edge */
+.list-heading {
+  margin: 1.2rem 0 0.5rem;
+  /* lilac marker swipe (same rough SVG as the project tabs); no negative
+     margin overhang — the leaf clips anything left of its edge */
+  width: fit-content;
+  padding: 0.12em 0.45em;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'><filter id='m' x='-10%25' y='-30%25' width='120%25' height='160%25'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.22' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='9'/></filter><rect x='4' y='7' width='192' height='27' fill='%23c9a7eb' opacity='0.5' filter='url(%23m)'/></svg>");
+  background-size: 100% 100%;
+  transform: rotate(calc(var(--page-tilt) * -1.1));
+  transform-origin: left center;
+}
+
+/* home's right leaf is plain text — let it run closer to the page edge */
+#page-home .page-right { right: 7.5%; }
+
+/* tilt each item rather than the whole list: a tall rotated list swings
+   its top-left corner (the "1.") past the leaf edge and gets clipped */
+.current-list {
+  margin: 0;
+  padding-left: 1.4rem;
+}
+
+.current-list li {
+  transform: rotate(calc(var(--page-tilt) * -1.1));
+  transform-origin: left center;
+}
+
+.current-list li + li { margin-top: 0.55rem; }
+
+/* the book's right page flattens out lower down, so the "recently"
+   block gets a gentler tilt than the top of the leaf */
+.current-list + .list-heading {
+  margin-top: 1.8rem;
+  transform: rotate(calc(var(--page-tilt) * -0.4));
+}
+
+.current-list + .list-heading + .current-list li {
+  transform: rotate(calc(var(--page-tilt) * -0.4));
+}
+
+.current-list a {
+  color: var(--ink-color);
+  text-decoration: none;
+}
+
+.current-list a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* small note tucked under the collage, following the left page's tilt */
+.open-to {
+  margin: 1.1rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--ink-faded);
+  text-align: center;
+  transform: rotate(calc(var(--page-tilt) * 0.3));
+}
+
+/* Messy hand-drawn underline: a wobbly two-pass pen stroke (SVG),
+   pinned to the bottom of the span and stretched to its width. */
+.scribble-underline {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'><path d='M3 7.5 Q 18 3.5 36 6.5 T 70 5.5 T 116 6.5' fill='none' stroke='%235aa9d6' stroke-width='2.6' stroke-linecap='round' opacity='0.9'/><path d='M6 9.5 Q 30 6.5 55 8.5 T 113 8' fill='none' stroke='%235aa9d6' stroke-width='1.6' stroke-linecap='round' opacity='0.55'/></svg>");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 0.42em;
+  padding-bottom: 0.12em;
+}
+
+/* ------------------------------------------------------------
+   Experience — journal entries: role, then org + a right-aligned
+   handwritten date tag on one line, then one faded line. Text runs
+   the full leaf width (no date margin column). Each photo is taped right under the entry
+   it belongs to. Left page tilts positive, right page negative and
+   eases off lower down where the book's right page flattens.
+   ------------------------------------------------------------ */
+#page-experience .page-left .list-heading {
+  margin-top: 1rem; /* tucked just under the nav chip */
+  transform: rotate(calc(var(--page-tilt) * 0.65));
+}
+
+#page-experience .page-right { right: 7.5%; }
+
+/* left leaf's text sits closer to the page edge here (default 13%) */
+#page-experience .page-left { left: 9.5%; }
+
+#page-experience .page-right .list-heading { margin-top: 1.2rem; }
+
+.journal {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  /* rotated rows swing their corners out a hair on both sides */
+  padding: 0 0.12rem 0 0.35rem;
+}
+
+.entry {
+  transform-origin: left center;
+}
+
+/* one rhythm: entries 1.35rem apart; a photo hugs the entry above it
+   (0.9rem) and leaves the usual gap before the next one */
+.entry + .entry { margin-top: 1.9rem; }
+
+.page-left .entry { transform: rotate(calc(var(--page-tilt) * 0.65)); }
+.page-right .entry { transform: rotate(calc(var(--page-tilt) * -0.6)); }
+/* lower on the right page: gentler, like home's "recently" block */
+.page-right .entry ~ .entry { transform: rotate(calc(var(--page-tilt) * -0.3)); }
+
+.entry-date {
+  font-family: var(--font-handwriting);
+  margin-left: auto; /* right-aligned tag at the end of the org line */
+  font-size: 0.74rem;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  /* a shade darker than --ink-faded: at this small size it still
+     clears 4.5:1 even on the darkest paper fibres (median ~6.2:1) */
+  color: #4e463f;
+  white-space: nowrap;
+}
+
+/* org (left) + date tag (right) share one handwritten line; if a long
+   org can't fit both, the date drops under it instead of squeezing */
+.entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.8rem;
+  margin-top: 0.05rem;
+}
+
+.entry-role,
+.entry-line { margin: 0; }
+
+.entry-role { line-height: 1.35; }
+
+/* org drops to its own line in the handwriting font, so long titles
+   never break mid "role · org" */
+.entry-sep { display: none; }
+
+#page-experience .nowrap { white-space: nowrap; }
+
+.entry-org {
+  font-family: var(--font-handwriting);
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: var(--ink-color);
+}
+
+.entry-role a {
+  color: var(--ink-color);
+  text-decoration: none;
+}
+
+.entry-line {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--ink-faded);
+}
+
+/* taped snapshots, pasted beside their entry's text (side-right /
+   side-left alternate down the spread). Same print + tape as the blog
+   clippings, smaller. */
+.entry.has-snap {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.entry.side-left { flex-direction: row-reverse; }
+
+.entry.has-snap .entry-body { flex: 1; min-width: 0; }
+
+.snap {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(46%, 12.5rem, 25vh);
+  margin-top: 0.55rem; /* room for the tape above */
+  padding: 0.3rem 0.3rem 0.45rem;
+  background: #fdfcf7;
+  box-shadow: 0 3px 10px rgba(45, 32, 18, 0.16), 0 1px 3px rgba(45, 32, 18, 0.12);
+}
+
+.snap img { display: block; width: 100%; height: auto; }
+
+.snap::before {
+  content: "";
+  position: absolute;
+  top: -0.5rem;
+  left: 50%;
+  width: 3.2rem;
+  height: 0.95rem;
+  box-shadow: 0 1px 2px rgba(45, 32, 18, 0.1);
+}
+
+/* a little extra lean on top of the entry's own tilt */
+.side-right .snap { transform: rotate(2deg); margin-right: 0.3rem; }
+.side-left  .snap { transform: rotate(-2deg); margin-left: 0.2rem; }
+
+.side-right .snap::before { transform: translateX(-50%) rotate(-3deg); background: rgba(255, 213, 79, 0.5); }
+.side-left  .snap::before { transform: translateX(-50%) rotate(3deg);  background: rgba(90, 169, 214, 0.42); }
+.page-left .snap-portrait::before { background: rgba(201, 167, 235, 0.5); }
+
+/* near-square shots (treehouse) sit between landscape and portrait */
+.snap-square { width: min(33%, 8.3rem, 17.5vh); }
+
+/* bmo + treehouse: lean in toward their text and bottom out with the entry */
+.page-left .side-right .snap,
+.page-right .side-right .snap {
+  align-self: flex-end;
+  /* negative top margin lets the photo rise above the entry instead of
+     stretching it, so its bottom edge lands on the text's last line */
+  margin-top: -4rem;
+  transform: rotate(-3deg);
+}
+
+/* portrait shots (bmo) go narrower */
+.snap-portrait { width: min(26%, 6.2rem, 14vh); }
+
+/* no handwriting on this spread: org + date in the body serif
+   (overrides the handwritten defaults above) */
+#page-experience .entry-org {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+#page-experience .entry-date {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  letter-spacing: 0;
+}
+
+/* date (small, light) → role (bold) → org (italic) → one line */
+#page-experience .entry-meta { display: block; }
+#page-experience .entry-date {
+  display: block;
+  margin: 0 0 0.05rem;
+  font-size: 0.72rem;
+  color: #6f675f; /* light gray-brown; big enough gap from the role */
+}
+#page-experience .entry-role { font-weight: 600; font-size: 1.15rem; line-height: 1.3; }
+#page-experience .entry-org { font-weight: 400; }
+
+/* short screens (~1024x700): tighten the rhythm so the leaves barely scroll */
+@media (max-height: 760px) {
+  #page-experience .page-left .list-heading { margin-top: 0.8rem; }
+  #page-experience .page-right .list-heading { margin-top: 0.9rem; }
+  #page-experience .journal { margin-top: 0.7rem; }
+  #page-experience .entry + .entry { margin-top: 0.95rem; }
+  #page-experience .entry-line { margin-top: 0.15rem; font-size: 0.78rem; line-height: 1.38; }
+  #page-experience .entry-date { font-size: 0.72rem; }
+  #page-experience .snap { width: min(40%, 17vh); }
+  #page-experience .snap-portrait { width: min(23%, 9vh); }
+  #page-experience .snap-square { width: min(28%, 12.5vh); }
+}
+
+/* ------------------------------------------------------------
+   Projects — left index, right detail
+   ------------------------------------------------------------ */
+.project-index {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  /* small left inset so rotated numbers don't clip on the page edge */
+  padding: 0 0 0 0.35rem;
+  transform: rotate(calc(var(--page-tilt) * 0.65));
+  transform-origin: left center;
+}
+
+.project-index li + li { margin-top: 1.3rem; }
+
+.project-tab {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-handwriting);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--ink-color);
+  cursor: pointer;
+}
+
+.project-tab:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.project-tab:focus-visible {
+  outline: 2px dashed var(--ink-faded);
+  outline-offset: 3px;
+}
+
+/* selected project: rough marker swipe (same trick as .highlight),
+   a different colour per project — lilac / yellow / blue */
+.project-tab.is-current {
+  background-size: 100% 100%;
+  padding: 0.1em 0.4em;
+  margin: 0 -0.4em;
+}
+
+.project-index li:nth-child(1) .project-tab.is-current {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'><filter id='m' x='-10%25' y='-30%25' width='120%25' height='160%25'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.22' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='9'/></filter><rect x='4' y='7' width='192' height='27' fill='%23c9a7eb' opacity='0.5' filter='url(%23m)'/></svg>");
+}
+
+.project-index li:nth-child(2) .project-tab.is-current {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'><filter id='m' x='-10%25' y='-30%25' width='120%25' height='160%25'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.22' numOctaves='2' seed='13'/><feDisplacementMap in='SourceGraphic' scale='9'/></filter><rect x='4' y='7' width='192' height='27' fill='%23ffd54f' opacity='0.5' filter='url(%23m)'/></svg>");
+}
+
+.project-index li:nth-child(3) .project-tab.is-current {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'><filter id='m' x='-10%25' y='-30%25' width='120%25' height='160%25'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.22' numOctaves='2' seed='21'/><feDisplacementMap in='SourceGraphic' scale='9'/></filter><rect x='4' y='7' width='192' height='27' fill='%235aa9d6' opacity='0.45' filter='url(%23m)'/></svg>");
+}
+
+.project-detail { display: none; }
+.project-detail.is-open { display: block; }
+
+.detail-photos {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0.4rem 0 1rem;
+}
+
+.detail-photo {
+  width: 27%;
+  height: auto;
+  padding: 0.3rem 0.3rem 0.45rem;
+  background: #fdfcf7;
+  box-shadow: 0 3px 10px rgba(45, 32, 18, 0.16);
+  transform: rotate(-1.6deg);
+}
+
+.detail-photo + .detail-photo { transform: rotate(1.8deg); }
+
+.detail-photo-wide { width: min(88%, 24rem); }
+
+/* dsss team photo: single square-ish print, keep it modest on the page */
+#dsss-pane-1 .detail-photo-wide { width: min(58%, 16.5rem, 36vh); }
+
+.detail-intro {
+  /* top margin gives the rotated line room to rise without clipping
+     at the leaf's top edge */
+  margin: 1.5rem 0 0.7rem;
+  /* the counter-tilt swings a tall block's first lines a few px LEFT of
+     the leaf's clip edge — keep a little clearance so the opening
+     letter doesn't get shaved off */
+  padding-left: 0.45rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  /* counter-tilt matching the right leaf's (flattened) top edge */
+  transform: rotate(calc(var(--page-tilt) * -1.1));
+  transform-origin: left center;
+}
+
+/* quick links stack as their own handwritten lines — each link stays
+   whole (no mid-link wraps in the narrow column beside the pile) */
+.detail-quicklinks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin: 0.9rem 0 0;
+  font-size: 0.9rem;
+  transform: rotate(calc(var(--page-tilt) * -0.7));
+  transform-origin: left center;
+}
+
+.detail-quicklinks a {
+  color: var(--ink-color);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.detail-quicklinks a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- detail panes: "pages within the page", swapped like a book turn ---- */
+.detail-pane { display: none; }
+.detail-pane.is-open { display: block; }
+
+.pane-nav {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+}
+
+.pane-nav-next {
+  text-align: right;
+  /* pinned to the leaf's visible bottom even if the pane overflows,
+     so "next page" can never hide below the fold */
+  position: sticky;
+  bottom: 0.15rem;
+}
+
+
+.pane-link {
+  font-family: var(--font-handwriting);
+  color: var(--ink-faded);
+  text-decoration: none;
+}
+
+.pane-link:hover { color: var(--ink-color); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- plot carousel (ml detail): one chart at a time on a polaroid
+   card, handwritten arrows either side, caption line underneath.
+   The frame keeps the tallest plot's ratio so arrows/captions don't
+   jump when charts of different heights swap in. ---- */
+.plot-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.6rem 0 1rem;
+}
+
+.carousel-frame {
+  width: min(19rem, 68%, 40vh);
+  padding: 0.35rem 0.35rem 0.5rem;
+  background: #fdfcf7;
+  box-shadow: 0 3px 10px rgba(45, 32, 18, 0.16);
+  transform: rotate(-1.2deg);
+}
+
+.carousel-slide { display: none; margin: 0; }
+.carousel-slide.is-current { display: block; }
+
+.carousel-slide img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 900 / 763; /* tallest plot; shorter ones letterbox on white */
+  object-fit: contain;
+  background: #fff;
+}
+
+/* portrait variant for phone-screen slides (glo): narrower card,
+   phone aspect, short caption below */
+.carousel-portrait .carousel-frame { width: min(9rem, 46%, 16vh); }
+
+.carousel-portrait .carousel-slide img { aspect-ratio: 462 / 1000; }
+
+/* on big screens the leaves grow faster than the vh-capped media —
+   let the phone card and the dsss team photo take more of the paper */
+@media (min-width: 1500px) {
+  .carousel-portrait .carousel-frame { width: min(10.5rem, 46%, 18vh); }
+  #dsss-pane-1 .detail-photo-wide { width: min(58%, 19rem, 42vh); }
+}
+
+/* caption under each chart: serif, same voice as the case study's
+   .case-caption (the longer text reads better left-aligned) */
+.carousel-slide figcaption {
+  margin-top: 0.45rem;
+  padding: 0 0.2rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--ink-faded);
+}
+
+.carousel-arrow {
+  border: 0;
+  padding: 0.2rem 0.35rem;
+  background: none;
+  font-family: var(--font-handwriting);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink-faded);
+  /* no cursor here: the class would out-rank the flower-cursor rule on
+     `button` and bring back the plain pointer */
+}
+
+.carousel-arrow:hover { color: var(--ink-color); }
+
+.carousel-arrow:focus-visible {
+  outline: 2px dashed var(--ink-faded);
+  outline-offset: 3px;
+}
+
+/* ---- scroll cue: small handwritten "more ↓" chip pinned to the bottom
+   of an overflowing leaf (a full-width gradient band read as a smudge
+   on the paper, so the cue is a compact note instead) ---- */
+.page-left.can-scroll::after,
+.page-right.can-scroll::after {
+  content: "scroll \2193";
+  display: block;
+  position: sticky;
+  bottom: 0.2rem;
+  width: max-content;
+  margin: 0.4rem auto 0;
+  text-align: center;
+  font-family: var(--font-handwriting);
+  font-size: 0.95rem;
+  color: var(--ink-color);
+  padding: 0.1rem 0.55rem 0.15rem;
+  background: rgba(231, 228, 218, 0.92);
+  border-radius: 4px;
+  box-shadow: 0 0 10px 6px rgba(231, 228, 218, 0.75);
+  pointer-events: none;
+  animation: cue-bob 1.6s ease-in-out infinite alternate;
+}
+
+/* the projects spread fits its content — no "more" cue there */
+#page-projects .page-left.can-scroll::after,
+#page-projects .page-right.can-scroll::after { display: none; }
+
+@keyframes cue-bob {
+  from { transform: translateY(0); }
+  to   { transform: translateY(0.22rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-left.can-scroll::after,
+  .page-right.can-scroll::after { animation: none; }
+}
+
+/* ---- torn paper scraps (two wide notes stacked one above the other) ---- */
+.scrap-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.scrap {
+  position: relative;
+  width: 96%;
+}
+
+/* opposite paste tilts; each note hugs a different edge so the stack
+   reads as two casually glued clippings, not a centred list.
+   tilts stay small — wide paper swings its corners further than the
+   old narrow strips did, and the leaf clips horizontally */
+.scrap-a { transform: rotate(-0.9deg); align-self: flex-start; margin-left: 0.3rem; }
+.scrap-b { transform: rotate(1.1deg); align-self: flex-end; margin-right: 0.3rem; }
+
+/* washi tape holding each scrap down — off-centre, like taped in a hurry */
+.scrap::before {
+  content: "";
+  position: absolute;
+  top: -0.6rem;
+  left: 26%;
+  z-index: 1;
+  width: 5rem;
+  height: 1.2rem;
+  transform: translateX(-50%) rotate(-3deg);
+  background: rgba(201, 167, 235, 0.5); /* lilac */
+  box-shadow: 0 1px 2px rgba(45, 32, 18, 0.1);
+}
+
+.scrap-b::before {
+  left: 72%;
+  transform: translateX(-50%) rotate(2.5deg);
+  background: rgba(90, 169, 214, 0.42); /* sky blue */
+}
+
+/* the paper itself — ragged clip-path edges, like torn from a notepad.
+   polygons are drawn for wide-short paper: lots of wobble points along
+   the long top/bottom edges, only gentle nicks on the short sides */
+.scrap-inner {
+  background: #faf6ec;
+  /* generous padding keeps the writing sitting comfortably on the paper
+     instead of running edge to edge */
+  padding: 1.25rem 2rem 1.5rem;
+  box-shadow: 0 3px 9px rgba(45, 32, 18, 0.14);
+  clip-path: polygon(0% 9%, 5% 2%, 13% 6%, 22% 0%, 32% 4%, 42% 1%, 52% 5%, 62% 0%, 71% 4%, 80% 1%, 89% 5%, 96% 1%, 100% 9%, 99% 30%, 100% 55%, 99% 78%, 100% 92%, 94% 100%, 85% 95%, 76% 100%, 66% 96%, 56% 100%, 46% 97%, 36% 100%, 26% 95%, 16% 100%, 7% 96%, 1% 100%, 0% 84%, 1% 60%, 0% 36%);
+}
+
+.scrap-b .scrap-inner {
+  background: #f8f4ea;
+  clip-path: polygon(0% 10%, 7% 4%, 15% 0%, 25% 5%, 35% 1%, 45% 5%, 55% 0%, 64% 4%, 74% 1%, 83% 6%, 92% 2%, 100% 7%, 99% 28%, 100% 50%, 99% 74%, 100% 90%, 95% 100%, 87% 96%, 78% 100%, 68% 95%, 58% 100%, 48% 96%, 38% 100%, 28% 97%, 18% 100%, 9% 95%, 2% 99%, 0% 80%, 1% 58%, 0% 34%);
+}
+
+.scrap-heading {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-handwriting);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+/* single-column bullets, small soft ink — fits without any scrolling */
+.scrap-points {
+  margin: 0;
+  padding-left: 0.9rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #5c534b; /* softened gray-brown ink, gentler than full black */
+}
+
+.scrap-points li + li { margin-top: 0.28rem; }
+
+/* smaller books (1024-class): the leaf is much shorter, so tighten the
+   notes — full width, smaller ink, snugger padding — to keep pane 2
+   from scrolling */
+@media (min-width: 701px) and (max-width: 1100px) {
+  /* extra top room so the scraps' washi tape (-0.6rem overhang, rotated)
+     stays inside the leaf's clip edge */
+  .scrap-row { gap: 1.25rem; margin-top: 0.9rem; }
+  .scrap { width: 100%; }
+  .scrap-a { margin-left: 0; }
+  .scrap-b { margin-right: 0; }
+  .scrap-inner { padding: 1rem 1.5rem 1.2rem; }
+  .scrap-heading { margin-bottom: 0.35rem; font-size: 0.9rem; }
+  .scrap-points { font-size: 0.68rem; line-height: 1.45; }
+  .scrap-points li + li { margin-top: 0.3rem; }
+}
+
+.detail-points {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.detail-points li + li { margin-top: 0.25rem; }
+
+.detail-quote {
+  margin: 0 0 0.9rem;
+  padding-left: 0.9rem;
+  border-left: 3px solid rgba(224, 85, 159, 0.45);
+  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* handwritten index numbers in place of emoji/bullets */
+.index-num {
+  display: inline-block;
+  margin-right: 0.45rem;
+  font-family: var(--font-handwriting);
+  font-size: 0.95em;
+  color: var(--ink-faded);
+  transform: rotate(-4deg);
+}
+
+/* ------------------------------------------------------------
+   Case study spread (reached from projects)
+   ------------------------------------------------------------ */
+.back-line { margin: 0 0 1rem; font-size: 0.9rem; }
+
+.back-link {
+  color: var(--ink-faded);
+  text-decoration: none;
+  font-family: var(--font-handwriting);
+}
+
+.back-link:hover { color: var(--ink-color); text-decoration: underline; text-underline-offset: 3px; }
+
+.case-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-handwriting);
+  font-size: 1.5rem;
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+.case-label {
+  margin: 1.4rem 0 0.35rem;
+  font-family: var(--font-handwriting);
+  font-size: 1.05rem;
+}
+
+.case-sublabel {
+  margin: 0.9rem 0 0.25rem;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+
+.case-text {
+  margin: 0 0 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.case-plot {
+  display: block;
+  width: min(92%, 24rem);
+  height: auto;
+  margin: 1.3rem auto 0.5rem;
+  padding: 0.3rem;
+  background: #fdfcf7;
+  box-shadow: 0 3px 10px rgba(45, 32, 18, 0.16);
+  transform: rotate(-1deg);
+}
+
+.case-plot:nth-of-type(even) { transform: rotate(1.2deg); }
+
+.case-caption {
+  margin: 0 auto 1.2rem;
+  max-width: 92%;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-faded);
+}
+
+/* ------------------------------------------------------------
+   Blogs — scrapbook clippings (cover photo + title, washi tape)
+   ------------------------------------------------------------ */
+/* The blogs leaves are flex columns so the free paper distributes
+   around the clippings (auto margins) instead of pooling at the
+   bottom. Auto margins collapse to 0 on overflow, so scrolling
+   still behaves if the page ever gets more cards. */
+#page-blogs .page-left,
+#page-blogs .page-right {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}
+
+#page-blogs .page-right { padding-top: 1rem; }
+
+.clipping {
+  display: block;
+  position: relative;
+  flex-shrink: 0; /* keep the photo size; the leaf never squashes it */
+  width: min(76%, 18.5rem);
+  margin: auto;
+  padding: 0.55rem 0.55rem 0.7rem;
+  background: #fdfcf7; /* photo-print border */
+  box-shadow: 0 3px 10px rgba(45, 32, 18, 0.16), 0 1px 3px rgba(45, 32, 18, 0.12);
+  color: var(--ink-color);
+  text-decoration: none;
+  --paste-angle: -2deg;
+  transform: rotate(var(--paste-angle));
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+/* alternate the paste angle so no two clippings sit the same
+   (only the variable changes, so .clipping:hover always wins) */
+.page-left .clipping:nth-of-type(even) { --paste-angle: 1.7deg; }
+.page-right .clipping { --paste-angle: 1.4deg; }
+.page-right .clipping:nth-of-type(even) { --paste-angle: -1.2deg; }
+
+.clipping:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 8px 22px rgba(45, 32, 18, 0.22), 0 2px 6px rgba(45, 32, 18, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clipping,
+  .clipping:hover { transition: none; transform: none; }
+}
+
+.clipping img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.clipping-title {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  text-align: center;
+  text-wrap: balance;
+  line-height: 1.35;
+}
+
+/* washi tape over the top edge; colour varies per clipping */
+.clipping::before {
+  content: "";
+  position: absolute;
+  top: -0.65rem;
+  left: 50%;
+  width: 5.2rem;
+  height: 1.35rem;
+  transform: translateX(-50%) rotate(-3.5deg);
+  background: rgba(255, 213, 79, 0.5); /* marker yellow */
+  box-shadow: 0 1px 2px rgba(45, 32, 18, 0.1);
+}
+
+.page-left .clipping:nth-of-type(even)::before {
+  transform: translateX(-50%) rotate(2.5deg);
+  background: rgba(90, 169, 214, 0.42); /* sky blue */
+}
+
+.page-right .clipping::before {
+  transform: translateX(-50%) rotate(3deg);
+  background: rgba(224, 85, 159, 0.4); /* magenta */
+}
+
+.page-right .clipping:nth-of-type(even)::before {
+  transform: translateX(-50%) rotate(-2deg);
+  background: rgba(201, 167, 235, 0.5); /* lilac */
+}
+
+/* ------------------------------------------------------------
+   Small laptops / tablets landscape (~1024w): give the book more
+   of the viewport back and calm the intro size down.
+   ------------------------------------------------------------ */
+@media (min-width: 701px) and (max-width: 1100px) {
+  :root {
+    --book-inset-x: 6vw;
+  }
+
+  .intro {
+    font-size: 0.9rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   Pressed-flower cursor: small flower everywhere, a bigger tilted
+   one over clickable things (keeps the "clickable" distinction).
+   Plain url() line is the fallback; image-set adds retina 2x.
+   ------------------------------------------------------------ */
+body {
+  cursor: url("../assets/images/cursor-flower.png") 15 16, auto;
+  cursor: image-set(url("../assets/images/cursor-flower.png") 1x, url("../assets/images/cursor-flower-2x.png") 2x) 15 16, auto;
+}
+
+a,
+button,
+[role="button"],
+.project-tab,
+.nav-link,
+.clipping,
+.page-turn {
+  cursor: url("../assets/images/cursor-flower-lg.png") 26 26, pointer;
+  cursor: image-set(url("../assets/images/cursor-flower-lg.png") 1x, url("../assets/images/cursor-flower-lg-2x.png") 2x) 26 26, pointer;
+}
+
+/* ------------------------------------------------------------
+   Narrow screens — temporary simple fallback (design pass later):
+   plain paper sheet, no book image, content stacked.
+   ------------------------------------------------------------ */
+@media (max-width: 700px) {
+  /* phones: plain paper, no page tilt (every text tilt keys off this) */
+  :root { --page-tilt: 0deg; }
+
+  body { overflow: auto; background: #f3efe6; }
+
+  .background-layer,
+  .book-frame { display: none; }
+
+  .content-layer { position: static; }
+
+  .site-nav {
+    position: static;
+    padding: 1.5rem 1.5rem 0;
+  }
+
+  .page-left,
+  .page-right {
+    position: static;
+    overflow: visible;
+    padding: 1.5rem;
+  }
+
+  .page-left { padding-top: 1rem; }
+
+  /* first clipping's tape sits above the photo; keep it off the nav */
+  #page-blogs .page-left { padding-top: 2.2rem; }
+}
