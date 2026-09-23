@@ -150,6 +150,9 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
+/* phone-only hint, shown in the <700px block at the bottom */
+.mobile-note { display: none; }
+
 /* Pages: one spread each, toggled by JS */
 .page { display: none; }
 .page.is-open { display: block; }
@@ -1104,6 +1107,18 @@ button,
   }
 
   .page-left { padding-top: 1rem; }
+
+  .mobile-note {
+    display: block;
+    margin: 0.9rem 1.5rem 0;
+    text-align: center;
+    font-family: var(--font-handwriting);
+    font-size: 0.85rem;
+    color: var(--ink-faded);
+  }
+
+  /* name sits closer to the laptop note (desktop keeps 2.2rem) */
+  .site-name { margin-top: 0.5rem; }
 
   /* first clipping's tape sits above the photo; keep it off the nav */
   #page-blogs .page-left { padding-top: 2.2rem; }
