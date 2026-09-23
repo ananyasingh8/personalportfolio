@@ -238,9 +238,9 @@ a:focus-visible {
 
 .home-collage {
   display: block;
-  margin: 2rem auto 0;
+  margin: 1.6rem auto 0;
   /* vh term keeps the leaf from overflowing on shorter screens */
-  width: min(88%, 23rem, 34vh);
+  width: min(88%, 23rem, 33vh);
   height: auto;
 }
 
@@ -292,6 +292,23 @@ a:focus-visible {
 }
 
 .current-list a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* contact links right under the "open to..." note */
+.contact-links {
+  margin: 0.35rem 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 1.1rem;
+  font-size: 0.85rem;
+  transform: rotate(calc(var(--page-tilt) * 0.3));
+}
+
+.contact-links a {
+  color: var(--ink-color);
+  text-decoration: none;
+}
+
+.contact-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* small note tucked under the collage, following the left page's tilt */
 .open-to {

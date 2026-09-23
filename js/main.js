@@ -38,15 +38,27 @@
         pageTurnSound.play().catch(function () {});
       }
       openPage(id);
-      if (history.replaceState) {
-        history.replaceState(null, "", "#" + id);
+      // pushState (not replace) so the browser back button turns pages
+      if (!alreadyOpen && history.pushState) {
+        history.pushState(null, "", "#" + id);
       }
     });
+  });
+
+  // back / forward: reopen whichever spread the hash names
+  window.addEventListener("popstate", function () {
+    var id = window.location.hash.replace("#", "") || pages[0].id;
+    if (document.getElementById(id)) {
+      openPage(id);
+    }
   });
 
   // Projects: left-index tabs swap the right-page detail
   var projectTabs = Array.prototype.slice.call(document.querySelectorAll(".project-tab"));
   var projectDetails = Array.prototype.slice.call(document.querySelectorAll(".project-detail"));
+  projectTabs.forEach(function (t) {
+    t.setAttribute("aria-pressed", t.classList.contains("is-current") ? "true" : "false");
+  });
 
   projectTabs.forEach(function (tab) {
     tab.addEventListener("click", function () {
@@ -62,9 +74,14 @@
       });
       projectTabs.forEach(function (t) {
         t.classList.toggle("is-current", t === tab);
+        t.setAttribute("aria-pressed", t === tab ? "true" : "false");
       });
       resetPanes();
       updateScrollCues();
+      // phones stack the leaves, so the detail sits below the fold
+      if (window.matchMedia("(max-width: 700px)").matches) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
   });
 
