@@ -269,6 +269,7 @@ a:focus-visible {
 .current-list {
   margin: 0;
   padding-left: 1.4rem;
+  font-size: 0.93rem;
 }
 
 .current-list li {
@@ -960,14 +961,23 @@ a:focus-visible {
    around the clippings (auto margins) instead of pooling at the
    bottom. Auto margins collapse to 0 on overflow, so scrolling
    still behaves if the page ever gets more cards. */
-#page-blogs .page-left,
-#page-blogs .page-right {
+.blog-spread .page-left,
+.blog-spread .page-right {
   display: flex;
   flex-direction: column;
   padding-bottom: 1rem;
 }
 
-#page-blogs .page-right { padding-top: 1rem; }
+.blog-spread .page-right { padding-top: 1rem; }
+
+/* blogs "next page": out of the flow so the right leaf's cards line up
+   with the left leaf's, and tucked down near the page's bottom edge */
+.blog-spread .pane-nav-next {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 0.2rem;
+  margin: 0;
+}
 
 .clipping {
   display: block;
@@ -1121,5 +1131,6 @@ button,
   .site-name { margin-top: 0.5rem; }
 
   /* first clipping's tape sits above the photo; keep it off the nav */
-  #page-blogs .page-left { padding-top: 2.2rem; }
+  .blog-spread .page-left { padding-top: 2.2rem; }
+  .blog-spread .pane-nav-next { position: static; }
 }
